@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" href="css/uikit.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="js/uikit.min.js"></script>
+    </head>
+    <body>
+        <div class="uk-container uk-container-large uk-position-center">
+            <h1 class="uk-text-center uk-animation-slide-right">Hello! Welcome to my world.</h1>
+            <div id="message"></div>
+            <div id="data" class="uk-text-center"><div uk-spinner id="spin" style="display:none"></div></div>
+            <div class="uk-text-center">
+                <input type="button" class="uk-button uk-button-default" id="press" onclick="getReady();" value="Press me!">
+                <input type="button" class="uk-button uk-button-default" id="log" value="Sign in on papaly">
+            </div>
+            <form id="login" class="uk-form-horizontal" style="display: none;">
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="username">Papaly Email</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input uk-form-width-large" id="username" type="email" placeholder="Your email">
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="password">Papaly password</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input uk-form-width-large" id="password" type="password" placeholder="Your password">
+                    </div>
+                </div>
+                <div class="uk-margin uk-text-center">
+                    <input type="button" class="uk-button uk-button-default" onclick="doLogin();" value="Sign in">
+                    <input type="submit" class="uk-button uk-button-default" id="home" value="Back to home">
+                </div>
+            </form>
+        </div>
+    </body>
+    <script>
+        $("#log").click(function() {
+            if ($("#login").attr('style').indexOf('none') != -1) {
+                $("#login").show(), $("#message").html(''),$("#press").hide(), $("#log").hide(), $("#data").hide(), $("h1").html('Sign in on Papaly');
+            }
+        });
+        function doLogin() {
+            var data = {
+                username: $("#username").val(),
+                password: $("#password").val()
+            }
+            $.ajax({
+                url: 'http://localhost:3000/login',
+                type: 'POST',
+                data: data
+            }).done(function(response) {
+                var alert = response['error'] ? 'uk-alert-warning' : 'uk-alert-success';
+                var message = '<div class="' + alert + '" uk-alert>';
+                    message += response['message'];
+                    message += '</div>';
+                $("#message").html(message);
+            });
+        }
+        function getReady() {
+            $("#spin").show();
+            $.post("http://localhost:3000/", function( data ) {
+                $("#spin").hide();
+                if (data['error']) {
+                    var message = '<div class="uk-alert-warning" uk-alert>';
+                        message += data['message'];
+                        message += '</div>';
+                    $("#message").html(message);
+                } else {
+                    $(".uk-container").removeClass('uk-position-center');
+                    var objet   = JSON.parse(data);
+                    var papaly      = objet["papaly"][0];
+                    for (var link in papaly){
+                        var div = $('<div />', { 'class': 'uk-column-1-8' });
+                        div.append(link + ' <br />');
+                        for(var i = 0; i < papaly[link].length; i++){
+                            div.append('<a href="' + papaly[link][i]+'">' + papaly[link][i] +'</a> <br>');
+                        }
+                        $("#data").append(div);
+                        $("#data").append("<br>");
+                    }
+                }
+            });
+        }
+    </script>
+</html>
