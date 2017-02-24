@@ -1,0 +1,25 @@
+{
+  "name": "scrapperpapaly",
+  "version": "1.0.0",
+  "description": "scrap board papaly",
+  "main": "scrapper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xSlOom/ScrapperPapaly.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xSlOom/ScrapperPapaly/issues"
+  },
+  "homepage": "https://github.com/xSlOom/ScrapperPapaly#readme",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "cheerio": "^0.22.0",
+    "express": "^3.14.1",
+    "request": "^2.79.0"
+  }
+}
